@@ -1,11 +1,11 @@
-# Parsing XML with Python
+# Python에서 XML 파싱하기
 
-[![Bright Data Promo](https://github.com/luminati-io/LinkedIn-Scraper/raw/main/Proxies%20and%20scrapers%20GitHub%20bonus%20banner.png)](https://brightdata.com/)
+[![Bright Data Promo](https://github.com/luminati-io/LinkedIn-Scraper/raw/main/Proxies%20and%20scrapers%20GitHub%20bonus%20banner.png)](https://brightdata.co.kr/)
 
-Learn how to parse XML in Python using libraries like ElementTree, lxml, and SAX to enhance your data processing projects.
+ElementTree, lxml, SAX 같은 라이브러리를 사용하여 Python에서 XML을 파싱하는 방법을 학습하고 데이터 처리 프로젝트를 강화해 보시기 바랍니다.
 
-- [Key Concepts of an XML File](#key-concepts-of-an-xml-file)
-- [Various Ways to Parse XML in Python](#various-ways-to-parse-xml-in-python)
+- [XML 파일의 핵심 개념](#key-concepts-of-an-xml-file)
+- [Python에서 XML을 파싱하는 다양한 방법](#various-ways-to-parse-xml-in-python)
 - [ElementTree](#elementtree)
 - [lxml](#lxml)
 - [minidom](#minidom)
@@ -13,32 +13,32 @@ Learn how to parse XML in Python using libraries like ElementTree, lxml, and SAX
 
 ## Key Concepts of an XML File
 
-Before diving into how to parse XML in Python, it's important to first understand what XML Schema Definition (XSD) is and the fundamental elements that make up an XML file. This foundational knowledge will guide you in choosing the right Python library for your parsing needs.
+Python에서 XML을 파싱하는 방법을 살펴보기 전에, 먼저 XML Schema Definition (XSD)이 무엇인지와 XML 파일을 구성하는 기본 요소를 이해하는 것이 중요합니다. 이 기초 지식은 파싱 요구사항에 맞는 적절한 Python 라이브러리를 선택하는 데 도움이 됩니다.
 
-[XSD](https://en.wikipedia.org/wiki/XML_Schema_(W3C)) is a schema specification that defines the structure, content, and data types permitted in an XML document. It acts as a set of validation rules, ensuring that XML files follow a consistent format.
+[XSD](https://en.wikipedia.org/wiki/XML_Schema_(W3C))는 XML 문서에서 허용되는 구조, 콘텐츠, 데이터 타입을 정의하는 스키마 사양입니다. 이는 검증 규칙 집합 역할을 하며 XML 파일이 일관된 형식을 따르도록 보장합니다.
 
-An XML file typically contains elements such as `Namespace`, `root`, `attributes`, `elements`, and `text content`, which together represent structured data.
+XML 파일에는 일반적으로 `Namespace`, `root`, `attributes`, `elements`, `text content` 같은 요소가 포함되며, 이들이 함께 구조화된 데이터를 표현합니다.
 
-- **[`Namespace`](https://www.w3schools.com/xml/xml_namespaces.asp)** uniquely identifies elements and attributes in XML documents. It helps prevent naming collisions and supports interoperability between different XML datasets.
-- **[`root`](https://en.wikipedia.org/wiki/Root_element)** is the top-level element of an XML document. It serves as the entry point to the XML structure and encompasses all other elements.
-- **[`attributes`](https://www.w3schools.com/xml/xml_attributes.asp)** offer additional context about an element. Defined within an element's start tag, they consist of name-value pairs.
-- **[`elements`](https://www.w3schools.com/xml/xml_elements.asp)** are the core units of an XML file, representing the actual data or structural tags. Elements can nest within each other to build a hierarchy.
-- **[`text content`](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent)** refers to the actual textual data between an element’s start and end tags. This can include plain text, numeric values, or other characters.
+- **[`Namespace`](https://www.w3schools.com/xml/xml_namespaces.asp)**는 XML 문서의 요소와 attributes를 고유하게 식별합니다. 이름 충돌을 방지하고 서로 다른 XML 데이터セット 간의 상호 운용성을 지원합니다.
+- **[`root`](https://en.wikipedia.org/wiki/Root_element)**는 XML 문서의 최상위 요소입니다. XML 구조의 진입점 역할을 하며 다른 모든 요소를 포함합니다.
+- **[`attributes`](https://www.w3schools.com/xml/xml_attributes.asp)**는 요소에 대한 추가 컨텍스트를 제공합니다. 요소의 시작 태그 안에 정의되며 이름-값 쌍으로 구성됩니다.
+- **[`elements`](https://www.w3schools.com/xml/xml_elements.asp)**는 XML 파일의 핵심 단위로, 실제 데이터 또는 구조 태그를 나타냅니다. 요소는 계층 구조를 만들기 위해 서로 중첩될 수 있습니다.
+- **[`text content`](https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent)**는 요소의 시작 태그와 종료 태그 사이에 있는 실제 텍스트 데이터입니다. 일반 텍스트, 숫자 값 또는 기타 문자가 포함될 수 있습니다.
 
-For instance, the [Bright Data sitemap](https://brightdata.com/post-sitemap.xml) follows this XML structure:
+예를 들어, [Bright Data sitemap](https://brightdata.co.kr/post-sitemap.xml)은 다음 XML 구조를 따릅니다:
 
-- **`urlset`** serves as the `root` element.
-- **`<urlset xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">`** is the namespace declaration for the `urlset` element. This indicates that the schema rules apply to `urlset` and all nested elements.
-- **`url`** is a direct child of the `root` element.
-- **`loc`** is a child element within the `url` element.
+- **`urlset`**은 `root` 요소 역할을 합니다.
+- **`<urlset xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">`**는 `urlset` 요소에 대한 namespace 선언입니다. 이는 스키마 규칙이 `urlset` 및 모든 중첩 요소에 적용됨을 의미합니다.
+- **`url`**은 `root` 요소의 직접적인 자식입니다.
+- **`loc`**은 `url` 요소 내부의 자식 요소입니다.
 
-Now that you’ve got a clearer picture of XSD and XML structure, it’s time to put that knowledge to use by parsing an XML file using a few helpful Python libraries.
+이제 XSD와 XML 구조를 더 명확히 이해하셨으므로, 몇 가지 유용한 Python 라이브러리를 사용하여 XML 파일을 파싱하며 이 지식을 활용해 보실 차례입니다.
 
 ## Various Ways to Parse XML in Python
 
-Let's use Bright Data sitemap. In the following examples, the Bright Data sitemap content is fetched using the Python `requests` library.
+Bright Data sitemap을 사용해 보겠습니다. 다음 예시에서는 Python `requests` 라이브러리를 사용해 Bright Data sitemap 콘텐츠를 가져옵니다.
 
-The Python requests library is not built-in, so you need to install it before proceeding. You can do so using the following command:
+Python requests 라이브러리는 기본 내장 라이브러리가 아니므로 진행하기 전에 설치해야 합니다. 다음 명령으로 설치할 수 있습니다:
 
 ```sh
 pip install requests
@@ -46,15 +46,15 @@ pip install requests
 
 ## ElementTree
 
-The [ElementTree XML API](https://docs.python.org/3/library/xml.etree.elementtree.html) offers a straightforward and user-friendly way to parse and generate XML data in Python. Since it’s part of Python’s standard library, there’s no need for any additional installation.
+[ElementTree XML API](https://docs.python.org/3/library/xml.etree.elementtree.html)는 Python에서 XML 데이터를 파싱하고 생성하는 간단하고 사용자 친화적인 방법을 제공합니다. Python 표준 라이브러리의 일부이므로 추가 설치가 필요하지 않습니다.
 
-For instance, you can use the [`findall()`](https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTree.Element.findall) method to retrieve all `url` elements from the root and print the text content of each `loc` element, like so:
+예를 들어, [`findall()`](https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTree.Element.findall) 메서드를 사용하여 root에서 모든 `url` 요소를 가져오고 각 `loc` 요소의 텍스트 콘텐츠를 다음과 같이 출력할 수 있습니다:
 
 ```python
 import xml.etree.ElementTree as ET
 import requests
 
-url = 'https://brightdata.com/post-sitemap.xml'
+url = 'https://brightdata.co.kr/post-sitemap.xml'
 
 response = requests.get(url)
 if response.status_code == 200:
@@ -70,42 +70,42 @@ else:
 
 ```
 
-All the URLs in the sitemap are printed in the output:
+sitemap의 모든 URL이 출력에 표시됩니다:
 
 ```
-https://brightdata.com/case-studies/powerdrop-case-study
-https://brightdata.com/case-studies/addressing-brand-protection-from-every-angle
-https://brightdata.com/case-studies/taking-control-of-the-digital-shelf-with-public-online-data
-https://brightdata.com/case-studies/the-seo-transformation
-https://brightdata.com/case-studies/data-driven-automated-e-commerce-tools
-https://brightdata.com/case-studies/highly-targeted-influencer-marketing
-https://brightdata.com/case-studies/data-driven-products-for-smarter-shopping-solutions
-https://brightdata.com/case-studies/workplace-diversity-facilitated-by-online-data
-https://brightdata.com/case-studies/alternative-travel-solutions-enabled-by-online-data-railofy
-https://brightdata.com/case-studies/data-intensive-analytical-solutions
-https://brightdata.com/case-studies/canopy-advantage-solutions
-https://brightdata.com/case-studies/seamless-digital-automations
+https://brightdata.co.kr/case-studies/powerdrop-case-study
+https://brightdata.co.kr/case-studies/addressing-brand-protection-from-every-angle
+https://brightdata.co.kr/case-studies/taking-control-of-the-digital-shelf-with-public-online-data
+https://brightdata.co.kr/case-studies/the-seo-transformation
+https://brightdata.co.kr/case-studies/data-driven-automated-e-commerce-tools
+https://brightdata.co.kr/case-studies/highly-targeted-influencer-marketing
+https://brightdata.co.kr/case-studies/data-driven-products-for-smarter-shopping-solutions
+https://brightdata.co.kr/case-studies/workplace-diversity-facilitated-by-online-data
+https://brightdata.co.kr/case-studies/alternative-travel-solutions-enabled-by-online-data-railofy
+https://brightdata.co.kr/case-studies/data-intensive-analytical-solutions
+https://brightdata.co.kr/case-studies/canopy-advantage-solutions
+https://brightdata.co.kr/case-studies/seamless-digital-automations
 ```
 
-ElementTree is a simple and intuitive XML parser in Python, great for small scripts like reading RSS feeds. However, it lacks strong schema validation and may not be suitable for complex or large-scale XML parsing—libraries like `lxml` are better for those cases.
+ElementTree는 Python에서 간단하고 직관적인 XML 파서로, RSS 피드 읽기 같은 작은 스크립트에 적합합니다. 다만 강력한 스키마 검증이 부족하며 복잡하거나 대규모 XML 파싱에는 적합하지 않을 수 있습니다—그런 경우에는 `lxml` 같은 라이브러리가 더 적합합니다.
 
 ## lxml
 
-[lxml](https://lxml.de/) is a fast, easy-to-use, and feature-rich API for parsing XML files in Python. You can [install `lxml`](https://lxml.de/installation.html#installation) using `pip`:
+[lxml](https://lxml.de/)은 Python에서 XML 파일을 파싱하기 위한 빠르고 사용하기 쉬우며 기능이 풍부한 API입니다. `pip`를 사용하여 [`lxml`을 설치](https://lxml.de/installation.html#installation)할 수 있습니다:
 
 ```sh
 pip install lxml
 ```
 
-Once installed, you can use `lxml` to parse XML files using [various API](https://lxml.de/apidoc/lxml.html) methods, such as `find()`, `findall()`, `findtext()`, `get()`, and `get_element_by_id()`.
+설치 후에는 `find()`, `findall()`, `findtext()`, `get()`, `get_element_by_id()` 같은 [다양한 API](https://lxml.de/apidoc/lxml.html) 메서드를 사용하여 `lxml`로 XML 파일을 파싱할 수 있습니다.
 
-For instance, you can use the `findall()` method to iterate over the `url` elements, find their `loc` elements (which are child elements of the `url` element), and then print the location text using the following code:
+예를 들어, `findall()` 메서드를 사용하여 `url` 요소를 순회하고(이는 `root` 요소의 하위 요소), 각 `url` 요소의 자식 요소인 `loc` 요소를 찾아 다음 코드로 location 텍스트를 출력할 수 있습니다:
 
 ```python
 from lxml import etree
 import requests
 
-url = "https://brightdata.com/post-sitemap.xml"
+url = "https://brightdata.co.kr/post-sitemap.xml"
 
 response = requests.get(url)
 if response.status_code == 200:
@@ -120,26 +120,26 @@ else:
     print("Failed to retrieve XML file from the URL.")
 ```
 
-The output displays all the URLs found in the sitemap:
+출력에는 sitemap에서 찾은 모든 URL이 표시됩니다:
 
 ```
-https://brightdata.com/case-studies/powerdrop-case-study
-https://brightdata.com/case-studies/addressing-brand-protection-from-every-angle
-https://brightdata.com/case-studies/taking-control-of-the-digital-shelf-with-public-online-data
-https://brightdata.com/case-studies/the-seo-transformation
-https://brightdata.com/case-studies/data-driven-automated-e-commerce-tools
-https://brightdata.com/case-studies/highly-targeted-influencer-marketing
-https://brightdata.com/case-studies/data-driven-products-for-smarter-shopping-solutions
-https://brightdata.com/case-studies/workplace-diversity-facilitated-by-online-data
-https://brightdata.com/case-studies/alternative-travel-solutions-enabled-by-online-data-railofy
-https://brightdata.com/case-studies/data-intensive-analytical-solutions
-https://brightdata.com/case-studies/canopy-advantage-solutions
-https://brightdata.com/case-studies/seamless-digital-automations
+https://brightdata.co.kr/case-studies/powerdrop-case-study
+https://brightdata.co.kr/case-studies/addressing-brand-protection-from-every-angle
+https://brightdata.co.kr/case-studies/taking-control-of-the-digital-shelf-with-public-online-data
+https://brightdata.co.kr/case-studies/the-seo-transformation
+https://brightdata.co.kr/case-studies/data-driven-automated-e-commerce-tools
+https://brightdata.co.kr/case-studies/highly-targeted-influencer-marketing
+https://brightdata.co.kr/case-studies/data-driven-products-for-smarter-shopping-solutions
+https://brightdata.co.kr/case-studies/workplace-diversity-facilitated-by-online-data
+https://brightdata.co.kr/case-studies/alternative-travel-solutions-enabled-by-online-data-railofy
+https://brightdata.co.kr/case-studies/data-intensive-analytical-solutions
+https://brightdata.co.kr/case-studies/canopy-advantage-solutions
+https://brightdata.co.kr/case-studies/seamless-digital-automations
 ```
 
-Up to this point, you’ve seen how to locate elements and display their values. Next, let’s look at how to validate an XML file against its schema before parsing. This step confirms that the file follows the structure defined in the XSD.
+지금까지 요소를 찾고 그 값을 표시하는 방법을 살펴보았습니다. 다음으로 파싱 전에 스키마에 대해 XML 파일을 검증하는 방법을 살펴보겠습니다. 이 단계는 파일이 XSD에 정의된 구조를 따르는지 확인합니다.
 
-Here’s what the sitemap’s XSD looks like:
+다음은 sitemap의 XSD 예시입니다:
 
 ```xml
 <?xml version="1.0"?>
@@ -169,16 +169,16 @@ Here’s what the sitemap’s XSD looks like:
 </xs:schema>
 ```
 
-To use the sitemap for schema validation, make sure you copy it manually and create a file named `schema.xsd`.
+스키마 검증에 이 XSD를 사용하려면, 해당 내용을 수동으로 복사하여 `schema.xsd`라는 파일을 생성하시기 바랍니다.
 
-Now, validate the XML file using this XSD:
+이제 이 XSD로 XML 파일을 검증합니다:
 
 ```python
 from lxml import etree
 
 import requests
 
-url = "https://brightdata.com/post-sitemap.xml"
+url = "https://brightdata.co.kr/post-sitemap.xml"
 
 response = requests.get(url)
 
@@ -196,25 +196,25 @@ if response.status_code == 200:
         print("XML validation error:", e)
 ```
 
-In this step, you parse the XSD file using the [`etree.parse()`](https://lxml.de/tutorial.html#the-parse-function) method, then build an XML Schema from the parsed content. Finally, you validate the XML root against that schema using `assertValid()`. If the XML passes validation, you'll see a message like `XML is valid according to the schema`; otherwise, a [`DocumentInvalid`](https://lxml.de/api/lxml.etree.DocumentInvalid-class.html) exception is thrown.
+이 단계에서는 [`etree.parse()`](https://lxml.de/tutorial.html#the-parse-function) 메서드로 XSD 파일을 파싱한 뒤, 파싱된 콘텐츠에서 XML Schema를 생성합니다. 마지막으로 `assertValid()`를 사용해 해당 스키마에 대해 XML root를 검증합니다. XML이 검증을 통과하면 `XML is valid according to the schema` 같은 메시지가 표시되고, 그렇지 않으면 [`DocumentInvalid`](https://lxml.de/api/lxml.etree.DocumentInvalid-class.html) 예외가 발생합니다.
 
-Your output should look like this:
+출력은 다음과 같이 표시됩니다:
 
 ```
  Schema Validation:
     XML is valid according to the schema.
 ```
 
-Now, let’s read an XML file that uses the `xpath` method to find the elements using their path.
+이제 `xpath` 메서드를 사용해 경로로 요소를 찾아 XML 파일을 읽어 보겠습니다.
 
-To read the elements using the `xpath()` method, use the following code:
+`xpath()` 메서드로 요소를 읽으려면 다음 코드를 사용합니다:
 
 ```python
 from lxml import etree
 
 import requests
 
-url = "https://brightdata.com/post-sitemap.xml"
+url = "https://brightdata.co.kr/post-sitemap.xml"
 response = requests.get(url)
 
 if response.status_code == 200:
@@ -230,46 +230,46 @@ if response.status_code == 200:
 
 ```
 
-In this snippet, you register the `ns` prefix and link it to the namespace URI `http://www.sitemaps.org/schemas/sitemap/0.9`. The `XPath` expression then uses this prefix to target namespaced elements. Specifically, `.//ns:url/ns:loc` selects all `loc` elements that are children of `url` elements within that namespace.
+이 스니펫에서는 `ns` 프리픽스를 등록하고 이를 namespace URI `http://www.sitemaps.org/schemas/sitemap/0.9`에 연결합니다. 그런 다음 `XPath` 표현식은 이 프리픽스를 사용하여 namespace가 적용된 요소를 대상으로 합니다. 구체적으로 `.//ns:url/ns:loc`는 해당 namespace 내에서 `url` 요소의 자식인 모든 `loc` 요소를 선택합니다.
 
-The output will look like this:
+출력은 다음과 같습니다:
 
 ```
 XPath Support:
 
-https://brightdata.com/case-studies/powerdrop-case-study
-https://brightdata.com/case-studies/addressing-brand-protection-from-every-angle
-https://brightdata.com/case-studies/taking-control-of-the-digital-shelf-with-public-online-data
-https://brightdata.com/case-studies/the-seo-transformation
-https://brightdata.com/case-studies/data-driven-automated-e-commerce-tools
-https://brightdata.com/case-studies/highly-targeted-influencer-marketing
-https://brightdata.com/case-studies/data-driven-products-for-smarter-shopping-solutions
-https://brightdata.com/case-studies/workplace-diversity-facilitated-by-online-data
-https://brightdata.com/case-studies/alternative-travel-solutions-enabled-by-online-data-railofy
-https://brightdata.com/case-studies/data-intensive-analytical-solutions
-https://brightdata.com/case-studies/canopy-advantage-solutions
-https://brightdata.com/case-studies/seamless-digital-automations
+https://brightdata.co.kr/case-studies/powerdrop-case-study
+https://brightdata.co.kr/case-studies/addressing-brand-protection-from-every-angle
+https://brightdata.co.kr/case-studies/taking-control-of-the-digital-shelf-with-public-online-data
+https://brightdata.co.kr/case-studies/the-seo-transformation
+https://brightdata.co.kr/case-studies/data-driven-automated-e-commerce-tools
+https://brightdata.co.kr/case-studies/highly-targeted-influencer-marketing
+https://brightdata.co.kr/case-studies/data-driven-products-for-smarter-shopping-solutions
+https://brightdata.co.kr/case-studies/workplace-diversity-facilitated-by-online-data
+https://brightdata.co.kr/case-studies/alternative-travel-solutions-enabled-by-online-data-railofy
+https://brightdata.co.kr/case-studies/data-intensive-analytical-solutions
+https://brightdata.co.kr/case-studies/canopy-advantage-solutions
+https://brightdata.co.kr/case-studies/seamless-digital-automations
 ```
 
-The `find()` and `findall()` methods are faster than `xpath()` since `xpath()` loads all results into memory. Use `find()` unless you need more complex queries.
+`find()` 및 `findall()` 메서드는 `xpath()`보다 빠른데, 이는 `xpath()`가 모든 결과를 메모리에 로드하기 때문입니다. 더 복잡한 쿼리가 필요하지 않다면 `find()`를 사용하시기 바랍니다.
 
-`lxml` is a powerful library for parsing XML and HTML, supporting advanced features like XPath, schema validation, and XSLT. It's ideal for high-performance or complex tasks but requires separate installation.
+`lxml`은 XML과 HTML을 파싱하기 위한 강력한 라이브러리로, XPath, 스키마 검증, XSLT 같은 고급 기능을 지원합니다. 고성능 또는 복잡한 작업에 이상적이지만 별도의 설치가 필요합니다.
 
-If you're working with large or intricate XML data—like financial feeds—`lxml` is a strong choice for efficient querying, validation, and transformation.
+금융 피드처럼 크거나 복잡한 XML 데이터를 다루는 경우, `lxml`은 효율적인 쿼리, 검증, 변환을 위한 강력한 선택지입니다.
 
 ## minidom
 
-[`minidom`](https://docs.python.org/3/library/xml.dom.minidom.html) is a simple and lightweight XML parsing library included in Python’s standard library. While not as feature-rich or efficient as `lxml`, it provides an easy way to parse and manipulate XML data.
+[`minidom`](https://docs.python.org/3/library/xml.dom.minidom.html)은 Python 표준 라이브러리에 포함된 간단하고 가벼운 XML 파싱 라이브러리입니다. `lxml`만큼 기능이 풍부하거나 효율적이지는 않지만, XML 데이터를 쉽게 파싱하고 조작할 수 있는 방법을 제공합니다.
 
-You can use various DOM methods to access elements. For instance, the [`getElementsByTagName()` method](https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementsByTagName) allows you to retrieve elements by their tag name.
+다양한 DOM 메서드를 사용하여 요소에 접근할 수 있습니다. 예를 들어, [`getElementsByTagName()` method](https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementsByTagName)는 태그 이름으로 요소를 가져올 수 있게 해줍니다.
 
-Here’s an example of using the `minidom` library to parse an XML file and fetch elements by their tag names:
+다음은 `minidom` 라이브러리를 사용하여 XML 파일을 파싱하고 태그 이름으로 요소를 가져오는 예시입니다:
 
 ```python
 import requests
 import xml.dom.minidom
 
-url = "https://brightdata.com/post-sitemap.xml"
+url = "https://brightdata.co.kr/post-sitemap.xml"
 
 response = requests.get(url)
 if response.status_code == 200:
@@ -283,34 +283,34 @@ else:
     print("Failed to retrieve XML file from the URL.")
 ```
 
-Your output would look like this:
+출력은 다음과 같습니다:
 
 ```
-https://brightdata.com/case-studies/powerdrop-case-study
-https://brightdata.com/case-studies/addressing-brand-protection-from-every-angle
-https://brightdata.com/case-studies/taking-control-of-the-digital-shelf-with-public-online-data
-https://brightdata.com/case-studies/the-seo-transformation
-https://brightdata.com/case-studies/data-driven-automated-e-commerce-tools
-https://brightdata.com/case-studies/highly-targeted-influencer-marketing
-https://brightdata.com/case-studies/data-driven-products-for-smarter-shopping-solutions
-https://brightdata.com/case-studies/workplace-diversity-facilitated-by-online-data
-https://brightdata.com/case-studies/alternative-travel-solutions-enabled-by-online-data-railofy
-https://brightdata.com/case-studies/data-intensive-analytical-solutions
-https://brightdata.com/case-studies/canopy-advantage-solutions
-https://brightdata.com/case-studies/seamless-digital-automations
+https://brightdata.co.kr/case-studies/powerdrop-case-study
+https://brightdata.co.kr/case-studies/addressing-brand-protection-from-every-angle
+https://brightdata.co.kr/case-studies/taking-control-of-the-digital-shelf-with-public-online-data
+https://brightdata.co.kr/case-studies/the-seo-transformation
+https://brightdata.co.kr/case-studies/data-driven-automated-e-commerce-tools
+https://brightdata.co.kr/case-studies/highly-targeted-influencer-marketing
+https://brightdata.co.kr/case-studies/data-driven-products-for-smarter-shopping-solutions
+https://brightdata.co.kr/case-studies/workplace-diversity-facilitated-by-online-data
+https://brightdata.co.kr/case-studies/alternative-travel-solutions-enabled-by-online-data-railofy
+https://brightdata.co.kr/case-studies/data-intensive-analytical-solutions
+https://brightdata.co.kr/case-studies/canopy-advantage-solutions
+https://brightdata.co.kr/case-studies/seamless-digital-automations
 ```
 
-`minidom` represents XML data as a DOM tree, making it easy to navigate and manipulate. It's ideal for basic tasks like reading, modifying, or creating simple XML structures.
+`minidom`은 XML 데이터를 DOM 트리로 표현하므로 탐색과 조작이 쉽습니다. 간단한 XML 구조를 읽고, 수정하고, 생성하는 같은 기본 작업에 적합합니다.
 
-If your program needs to read settings from an XML file, `minidom` allows easy access to specific elements, such as finding child nodes or attributes. For example, you can quickly retrieve a `font-size` node and use its value in your application.
+프로그램에서 XML 파일로부터 설정을 읽어야 하는 경우, `minidom`을 사용하면 특정 요소에 쉽게 접근할 수 있습니다(예: 자식 노드 또는 attributes 찾기). 예를 들어 `font-size` 노드를 빠르게 가져와 애플리케이션에서 해당 값을 사용할 수 있습니다.
 
 ## SAX Parser
 
-The [SAX parser](https://docs.python.org/3/library/xml.sax.html) is an event-driven XML parser that processes documents sequentially, emitting events like start tags, end tags, and text content. Unlike DOM parsers, SAX doesn’t load the entire document into memory, making it ideal for large XML files where memory efficiency is important.
+[SAX parser](https://docs.python.org/3/library/xml.sax.html)는 문서를 순차적으로 처리하며 시작 태그, 종료 태그, 텍스트 콘텐츠 같은 이벤트를 발생시키는 이벤트 기반 XML 파서입니다. DOM 파서와 달리 SAX는 전체 문서를 메모리에 로드하지 않으므로, 메모리 효율이 중요한 대용량 XML 파일에 이상적입니다.
 
-To use SAX, you define event handlers for specific XML events, such as `startElement` and `endElement`, which you can customize to handle the document’s structure and content.
+SAX를 사용하려면 `startElement`, `endElement` 같은 특정 XML 이벤트에 대한 이벤트 핸들러를 정의하며, 문서의 구조와 콘텐츠를 처리하도록 이를 커스터마이즈할 수 있습니다.
 
-Here’s an example of using the SAX parser to process an XML file, defining event handlers to extract URL information from a sitemap:
+다음은 SAX 파서를 사용하여 XML 파일을 처리하고, sitemap에서 URL 정보를 추출하기 위해 이벤트 핸들러를 정의하는 예시입니다:
 
 ```python
 import requests
@@ -341,7 +341,7 @@ class MyContentHandler(xml.sax.handler.ContentHandler):
         elif name == "loc":
             self.in_loc = False
 
-url = "https://brightdata.com/post-sitemap.xml"
+url = "https://brightdata.co.kr/post-sitemap.xml"
 
 response = requests.get(url)
 if response.status_code == 200:
@@ -356,29 +356,29 @@ else:
     print("Failed to retrieve XML file from the URL.")
 ```
 
-Your output would look like this:
+출력은 다음과 같습니다:
 
 ```
-https://brightdata.com/case-studies/powerdrop-case-study
-https://brightdata.com/case-studies/addressing-brand-protection-from-every-angle
-https://brightdata.com/case-studies/taking-control-of-the-digital-shelf-with-public-online-data
-https://brightdata.com/case-studies/the-seo-transformation
-https://brightdata.com/case-studies/data-driven-automated-e-commerce-tools
-https://brightdata.com/case-studies/highly-targeted-influencer-marketing
-https://brightdata.com/case-studies/data-driven-products-for-smarter-shopping-solutions
-https://brightdata.com/case-studies/workplace-diversity-facilitated-by-online-data
-https://brightdata.com/case-studies/alternative-travel-solutions-enabled-by-online-data-railofy
-https://brightdata.com/case-studies/data-intensive-analytical-solutions
-https://brightdata.com/case-studies/canopy-advantage-solutions
-https://brightdata.com/case-studies/seamless-digital-automations
+https://brightdata.co.kr/case-studies/powerdrop-case-study
+https://brightdata.co.kr/case-studies/addressing-brand-protection-from-every-angle
+https://brightdata.co.kr/case-studies/taking-control-of-the-digital-shelf-with-public-online-data
+https://brightdata.co.kr/case-studies/the-seo-transformation
+https://brightdata.co.kr/case-studies/data-driven-automated-e-commerce-tools
+https://brightdata.co.kr/case-studies/highly-targeted-influencer-marketing
+https://brightdata.co.kr/case-studies/data-driven-products-for-smarter-shopping-solutions
+https://brightdata.co.kr/case-studies/workplace-diversity-facilitated-by-online-data
+https://brightdata.co.kr/case-studies/alternative-travel-solutions-enabled-by-online-data-railofy
+https://brightdata.co.kr/case-studies/data-intensive-analytical-solutions
+https://brightdata.co.kr/case-studies/canopy-advantage-solutions
+https://brightdata.co.kr/case-studies/seamless-digital-automations
 ```
 
-Unlike other parsers that load the entire file into memory, SAX processes files incrementally, saving memory and improving performance. However, it requires more code to handle each data segment and doesn’t allow revisiting parts of the data for later analysis.
+전체 파일을 메모리에 로드하는 다른 파서와 달리, SAX는 파일을 점진적으로 처리하므로 메모리를 절약하고 성능을 개선합니다. 하지만 각 데이터 구간을 처리하기 위한 코드가 더 많이 필요하고, 나중 분석을 위해 데이터의 특정 부분을 다시 방문하는 것은 허용하지 않습니다.
 
-SAX is ideal for efficiently scanning large XML files (e.g., log files) to extract specific information (e.g., error messages). However, if your analysis needs to explore relationships between different data segments, SAX may not be the best choice.
+SAX는 대용량 XML 파일(예: 로그 파일)을 효율적으로 스캔하여 특정 정보(예: 오류 메시지)를 추출하는 데 이상적입니다. 그러나 분석에서 서로 다른 데이터 구간 간의 관계를 탐색해야 한다면, SAX는 최선의 선택이 아닐 수 있습니다.
 
 ## Conclusion
 
-Python offers versatile libraries to simplify XML parsing. However, when using the requests library to access files online, you may face quota and throttling issues. [Bright Data](https://brightdata.com/) offers reliable proxy solutions to help bypass these limitations. 
+Python은 XML 파싱을 단순화하는 다재다능한 라이브러리를 제공합니다. 그러나 requests 라이브러리로 온라인 파일에 접근할 때는 쿼터 및 스로틀링 문제에 직면할 수 있습니다. [Bright Data](https://brightdata.co.kr/)는 이러한 제한을 우회하는 데 도움이 되는 신뢰할 수 있는 プロキシ 솔루션을 제공합니다. 
 
-If you'd rather skip the scraping and parsing, check out our [dataset marketplace](https://brightdata.com/products/datasets) for free!
+スクレイピング과 파싱을 건너뛰고 싶으시다면, 무료로 제공되는 [dataset marketplace](https://brightdata.co.kr/products/datasets)를 확인해 보시기 바랍니다!
