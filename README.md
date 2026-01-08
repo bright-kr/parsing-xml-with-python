@@ -1,6 +1,6 @@
 # Python에서 XML 파싱하기
 
-[![Bright Data Promo](https://github.com/luminati-io/LinkedIn-Scraper/raw/main/Proxies%20and%20scrapers%20GitHub%20bonus%20banner.png)](https://brightdata.co.kr/)
+[![Bright Data Promo](https://github.com/bright-kr/LinkedIn-Scraper/raw/main/Proxies%20and%20scrapers%20GitHub%20bonus%20banner.png)](https://brightdata.co.kr/)
 
 ElementTree, lxml, SAX 같은 라이브러리를 사용하여 Python에서 XML을 파싱하는 방법을 학습하고 데이터 처리 프로젝트를 강화해 보시기 바랍니다.
 
