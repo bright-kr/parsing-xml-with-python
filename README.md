@@ -379,6 +379,6 @@ SAX는 대용량 XML 파일(예: 로그 파일)을 효율적으로 스캔하여 
 
 ## Conclusion
 
-Python은 XML 파싱을 단순화하는 다재다능한 라이브러리를 제공합니다. 그러나 requests 라이브러리로 온라인 파일에 접근할 때는 쿼터 및 스로틀링 문제에 직면할 수 있습니다. [Bright Data](https://brightdata.co.kr/)는 이러한 제한을 우회하는 데 도움이 되는 신뢰할 수 있는 プロキシ 솔루션을 제공합니다. 
+Python은 XML 파싱을 단순화하는 다재다능한 라이브러리를 제공합니다. 그러나 requests 라이브러리로 온라인 파일에 접근할 때는 쿼터 및 스로틀링 문제에 직면할 수 있습니다. [Bright Data](https://brightdata.co.kr/)는 이러한 제한을 우회하는 데 도움이 되는 신뢰할 수 있는 프록시 솔루션을 제공합니다. 
 
-スクレイピング과 파싱을 건너뛰고 싶으시다면, 무료로 제공되는 [dataset marketplace](https://brightdata.co.kr/products/datasets)를 확인해 보시기 바랍니다!
+스크레이핑과 파싱을 건너뛰고 싶으시다면, 무료로 제공되는 [dataset marketplace](https://brightdata.co.kr/products/datasets)를 확인해 보시기 바랍니다!
